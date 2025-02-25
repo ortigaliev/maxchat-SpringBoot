@@ -21,11 +21,11 @@ public class AuthService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public String register(RegistrationDTO registrationDTO) {
+    public String register(RegistrationDTO registerDTO) {
 
         //1. Validation
         //2. username check
-       Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisible(registrationDTO.getUsername());
+       Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisible(registerDTO.getUsername());
 
        if (optional.isPresent()) {
            ProfileEntity profile = optional.get();
@@ -38,9 +38,9 @@ public class AuthService {
        }
 
        ProfileEntity entity = new ProfileEntity();
-       entity.setName(registrationDTO.getName());
-       entity.setUsername(registrationDTO.getUsername());
-       entity.setPassword(bCryptPasswordEncoder.encode(registrationDTO.getPassword()));
+       entity.setName(registerDTO.getName());
+       entity.setUsername(registerDTO.getUsername());
+       entity.setPassword(bCryptPasswordEncoder.encode(registerDTO.getPassword()));
        entity.setStatus(GeneralStatus.IN_REGISTRATION);
        entity.setVisible(true);
        entity.setCreatedDate(LocalDateTime.now());

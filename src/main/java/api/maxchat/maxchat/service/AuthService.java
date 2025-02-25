@@ -25,27 +25,27 @@ public class AuthService {
 
         //1. Validation
         //2. username check
-       Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisible(registerDTO.getUsername());
+        Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisible(registerDTO.getUsername(), true);
 
-       if (optional.isPresent()) {
-           ProfileEntity profile = optional.get();
-           if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
-               profileRepository.delete(profile);
-           }else {
-               throw new AppBadException("Username already exists");
-           }
+        if (optional.isPresent()) {
+            ProfileEntity profile = optional.get();
+            if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
+                profileRepository.delete(profile);
+            }else {
+                throw new AppBadException("Username already exists");
+            }
 
-       }
+        }
 
-       ProfileEntity entity = new ProfileEntity();
-       entity.setName(registerDTO.getName());
-       entity.setUsername(registerDTO.getUsername());
-       entity.setPassword(bCryptPasswordEncoder.encode(registerDTO.getPassword()));
-       entity.setStatus(GeneralStatus.IN_REGISTRATION);
-       entity.setVisible(true);
-       entity.setCreatedDate(LocalDateTime.now());
-       profileRepository.save(entity);
+        ProfileEntity entity = new ProfileEntity();
+        entity.setName(registerDTO.getName());
+        entity.setUsername(registerDTO.getUsername());
+        entity.setPassword(bCryptPasswordEncoder.encode(registerDTO.getPassword()));
+        entity.setStatus(GeneralStatus.IN_REGISTRATION);
+        entity.setVisible(true);
+        entity.setCreatedDate(LocalDateTime.now());
+        profileRepository.save(entity);
 
-        return null;
+        return "Registration successful";
     }
 }

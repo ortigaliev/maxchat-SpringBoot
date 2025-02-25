@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @Configuration
+@EnableWebSecurity
 public class SpringConfig {
 
     @Bean
@@ -26,7 +28,7 @@ public class SpringConfig {
         // authentication - Foydalanuvchining identifikatsiya qilish.
         // Ya'ni berilgan login va parolli user bor yoki yo'qligini aniqlash.
         String password = UUID.randomUUID().toString();
-        System.out.println("User Password Mazgi: " + password);
+        System.out.println("User Password: " + password);
 
         UserDetails user = User.builder()
                 .username("user")

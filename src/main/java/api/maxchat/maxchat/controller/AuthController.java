@@ -2,6 +2,7 @@ package api.maxchat.maxchat.controller;
 
 import api.maxchat.maxchat.dto.RegistrationDTO;
 import api.maxchat.maxchat.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegistrationDTO registration) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegistrationDTO registration) {
         return ResponseEntity.ok().body(authService.register(registration));
     }
 }

@@ -3,8 +3,10 @@ package api.maxchat.maxchat.service;
 import api.maxchat.maxchat.dto.RegistrationDTO;
 import api.maxchat.maxchat.entity.ProfileEntity;
 import api.maxchat.maxchat.enums.GeneralStatus;
+import api.maxchat.maxchat.enums.ProfileRole;
 import api.maxchat.maxchat.excp.AppBadException;
 import api.maxchat.maxchat.repository.ProfileRepository;
+import api.maxchat.maxchat.repository.ProfileRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,11 @@ public class AuthService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private ProfileRoleRepository profileRoleRepository;
+    @Autowired
+    private ProfileRoleService profileRoleService;
+
     public String register(RegistrationDTO registerDTO) {
 
         //1. Validation
@@ -30,6 +37,7 @@ public class AuthService {
         if (optional.isPresent()) {
             ProfileEntity profile = optional.get();
             if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
+                profileRoleService.deleteRoles(profile.getId());
                 profileRepository.delete(profile);
             }else {
                 throw new AppBadException("Username already exists");
@@ -45,6 +53,9 @@ public class AuthService {
         entity.setVisible(true);
         entity.setCreatedDate(LocalDateTime.now());
         profileRepository.save(entity);
+
+        //Insert Roles
+        profileRoleService.create(entity.getId(), ProfileRole.ROLE_USER);
 
         return "Registration successful";
     }

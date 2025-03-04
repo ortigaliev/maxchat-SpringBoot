@@ -16,7 +16,7 @@ public class EmailSendingService {
     public void sendRegistrationEmail(String email, Integer profileId) {
 
         String subject = "Registration Confirmation";
-        String body = "Assalomu alaykuk Bobur aka. Youtube dagi darslar uchun katta rahmat. Darslar juda tartibli va foydali bo'lyabdi!";
+        String body = "Please click to link for your account: http://localhost:8088/auth/register/verification/" + profileId;
         sendEmail(email, subject, body);
     }
 

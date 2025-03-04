@@ -73,6 +73,7 @@ public class AuthService {
         if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
             //IN_REGISTRATION => Active change
             profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
+            return "Registration successful";
 
         }
 

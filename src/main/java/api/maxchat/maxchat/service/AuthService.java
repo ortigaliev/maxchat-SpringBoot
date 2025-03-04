@@ -28,6 +28,12 @@ public class AuthService {
     @Autowired
     private ProfileRoleService profileRoleService;
 
+    @Autowired
+    private EmailSendingService emailSendingService;
+
+    @Autowired
+    private ProfileService profileService;
+
     public String register(RegistrationDTO registerDTO) {
 
         //1. Validation
@@ -57,6 +63,19 @@ public class AuthService {
         //Insert Roles
         profileRoleService.create(entity.getId(), ProfileRole.ROLE_USER);
 
+        emailSendingService.sendRegistrationEmail(registerDTO.getUsername(), entity.getId());
+
         return "Registration successful";
+    }
+
+    public String regVerification(Integer profileId){
+        ProfileEntity profile = profileService.getById(profileId);
+        if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
+            //IN_REGISTRATION => Active change
+            profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
+
+        }
+
+        return null;
     }
 }

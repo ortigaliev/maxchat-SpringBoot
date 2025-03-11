@@ -1,5 +1,6 @@
 package api.maxchat.maxchat.service;
 
+import api.maxchat.maxchat.utils.JwtUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,14 @@ public class EmailSendingService {
                 "<p>Hi Muhammadjon</p>\n" +
                 "<p>We wanted to share a quick update about the free learning tools available to you with your MaxChat account.</p>\n" +
                 "<p>We recently introduced The MaxChat Newsletter exclusively for paying MaxChat subscribers. (Here's our\n" +
-                "  <a href=\"http://localhost:8088/auth/register/verification/%d\" style=\"color:#4951f5\" target=\"_blank\">launch announcement</a>\n" +
+                "  <a href=\"http://localhost:8088/auth/register/verification/%s\" style=\"color:#4951f5\" target=\"_blank\">launch announcement</a>\n" +
                 "   in case you missed it).</p>\n" +
                 "<p style=\"line-height:150%\"><span style=\"color:#021b36\">As part of your free account, you now have access to a </span>\n" +
                 "  <span style=\"font-weight:bold\">free version</span>of this newsletter.</p>\n" +
                 "</body>\n" +
                 "</html>";
-        body = String.format(body, profileId);
+        body = String.format(body, JwtUtil.encode(profileId));
+        System.out.println(JwtUtil.encode(profileId));
         sendMimeEmail(email, subject, body);
     }
 

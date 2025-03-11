@@ -70,13 +70,13 @@ public class AuthService {
 
     public String regVerification(Integer profileId){
         ProfileEntity profile = profileService.getById(profileId);
+        System.out.println("profile" + profile);
         if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
             //IN_REGISTRATION => Active change
             profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
             return "Registration successful";
-
         }
+        throw new   AppBadException("Verification failed");
 
-        return null;
     }
 }

@@ -19,8 +19,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegistrationDTO registration) {
-        return ResponseEntity.ok().body(authService.register(registration));
+    public ResponseEntity<String> register(@Valid @RequestBody RegistrationDTO dto) {
+        System.out.println("dto=====" + dto);
+        return ResponseEntity.ok().body(authService.register(dto));
     }
 
     @GetMapping("/register/verification/{profileId}")

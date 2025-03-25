@@ -7,6 +7,8 @@ import api.maxchat.maxchat.enums.ProfileRole;
 import api.maxchat.maxchat.excp.AppBadException;
 import api.maxchat.maxchat.repository.ProfileRepository;
 import api.maxchat.maxchat.repository.ProfileRoleRepository;
+import api.maxchat.maxchat.utils.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -68,15 +70,19 @@ public class AuthService {
         return "Registration successful";
     }
 
-    public String regVerification(Integer profileId){
-        ProfileEntity profile = profileService.getById(profileId);
-        System.out.println("profile" + profile);
-        if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
-            //IN_REGISTRATION => Active change
-            profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
-            return "Registration successful";
+    public String regVerification(String token){
+        try {
+            Integer profileId = JwtUtil.decodeRegVerToken(token);
+            ProfileEntity profile = profileService.getById(profileId);
+            System.out.println("profile" + profile);
+            if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
+                //IN_REGISTRATION => Active change
+                profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
+                return "Registration successful";
+            }
+        } catch (JwtException e){
         }
-        throw new   AppBadException("Verification failed");
+        throw new AppBadException("Verification failed");
 
     }
 }

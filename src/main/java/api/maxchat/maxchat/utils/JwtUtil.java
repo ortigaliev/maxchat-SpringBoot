@@ -1,5 +1,6 @@
 package api.maxchat.maxchat.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -21,17 +22,16 @@ public class JwtUtil {
                 .compact();
     }
 
-//    public static JwtDTO decode(String token) {
-//        Claims claims = Jwts
-//                .parser()
-//                .verifyWith(getSignInKey())
-//                .build()
-//                .parseSignedClaims(token)
-//                .getPayload();
-//        String username = (String) claims.get("username");
-//        String role = (String) claims.get("role");
-//        return new JwtDTO(username, role);
-//    }
+    public static Integer decodeRegVerToken(String token) {
+        Claims claims = Jwts
+                .parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return Integer.valueOf(claims.getSubject());
+
+    }
 
     private static SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);

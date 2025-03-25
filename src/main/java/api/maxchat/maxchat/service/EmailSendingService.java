@@ -22,37 +22,40 @@ public class EmailSendingService {
         String body = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
-                "  <meta charset=\"UTF-8\">\n" +
-                "  <title>Title</title>\n" +
-                "  <style>\n" +
-                "    .header{\n" +
-                "      font-family: Helvetica, Arial, sans-serif;\n" +
-                "      color: #23496d;\n" +
-                "      word-break: break-word;\n" +
-                "      text-align: center;\n" +
-                "      padding: 10px 20px;\n" +
-                "    }\n" +
-                "    p {\n" +
-                "      width: 600px;\n" +
-                "      margin-right: auto;\n" +
-                "      margin-left: auto;\n" +
-                "    }\n" +
-                "  </style>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <title>Title</title>\n" +
+                "    <style>\n" +
+                "        a {\n" +
+                "            padding: 10px 30px;\n" +
+                "            display: inline-block;\n" +
+                "        }\n" +
+                "\n" +
+                "        .button-link {\n" +
+                "            text-decoration: none;\n" +
+                "            color: white;\n" +
+                "            background-color: indianred;\n" +
+                "        }\n" +
+                "\n" +
+                "        .button-link:hover {\n" +
+                "            background-color: #dd4444;\n" +
+                "        }\n" +
+                "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +
                 "\n" +
-                "<h1 class=\"header\">Complete Registration</h1>\n" +
-                "<p>Hi Muhammadjon</p>\n" +
-                "<p>We wanted to share a quick update about the free learning tools available to you with your MaxChat account.</p>\n" +
-                "<p>We recently introduced The MaxChat Newsletter exclusively for paying MaxChat subscribers. (Here's our\n" +
-                "  <a href=\"http://localhost:8088/auth/register/verification/%s\" style=\"color:#4951f5\" target=\"_blank\">launch announcement</a>\n" +
-                "   in case you missed it).</p>\n" +
-                "<p style=\"line-height:150%\"><span style=\"color:#021b36\">As part of your free account, you now have access to a </span>\n" +
-                "  <span style=\"font-weight:bold\">free version</span>of this newsletter.</p>\n" +
+                "<h1 style=\"text-align: center\">Complete Registration</h1>\n" +
+                "<p>Salom yaxshimisiz</p>\n" +
+                "<p>\n" +
+                "    Please click to button for completing registration: <a class=\"button-link\"\n" +
+                "                                                           href=\"http://localhost:8080/auth/registration/verification/%s\"\n" +
+                "                                                           target=\"_blank\">Click there</a>\n" +
+                "</p>\n" +
+                "\n" +
                 "</body>\n" +
-                "</html>";
-        body = String.format(body, JwtUtil.encode(profileId));
+                "</html>\n";
+
         System.out.println(JwtUtil.encode(profileId));
+        body = String.format(body, JwtUtil.encode(profileId));
         sendMimeEmail(email, subject, body);
     }
 

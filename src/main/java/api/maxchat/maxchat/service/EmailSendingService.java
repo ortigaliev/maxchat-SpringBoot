@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 public class EmailSendingService {
     @Value("${spring.mail.username}")
     private String fromAccount;
+
+    @Value("${server.domain}")
+    private String serverDomain;
+
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -47,7 +51,7 @@ public class EmailSendingService {
                 "<p>Salom yaxshimisiz</p>\n" +
                 "<p>\n" +
                 "    Please click to button for completing registration: <a class=\"button-link\"\n" +
-                "                                                           href=\"http://localhost:8080/auth/registration/verification/%s\"\n" +
+                "                                                           href=\"%s/auth/register/verification/%s\"\n" +
                 "                                                           target=\"_blank\">Click there</a>\n" +
                 "</p>\n" +
                 "\n" +
@@ -55,7 +59,7 @@ public class EmailSendingService {
                 "</html>\n";
 
         System.out.println(JwtUtil.encode(profileId));
-        body = String.format(body, JwtUtil.encode(profileId));
+        body = String.format(body, serverDomain, JwtUtil.encode(profileId));
         sendMimeEmail(email, subject, body);
     }
 

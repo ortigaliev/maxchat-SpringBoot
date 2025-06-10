@@ -12,12 +12,26 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ProfileEntity {
+
+    /*
+    * 2. Foydalanuvchilar ro‘yxatdan o'tishi va oldin ro‘yxatdan o'tgan foydalanuvchilar
+    tizimga login bo'lib kira olishi kerak.
+
+    Ro‘yxatdan o'tganda Isim, Email/Phone va Parol ma'lumotlarni kiritishi kerak.
+    Telefon raqam bilan ro‘yxatdan o'tish imkoni ham bo'lsin (Isim, PhoneNumber, Parol).
+    Ro‘yxatdan o'tishda Email yoki Phone ni tasdiqlashi kerak.
+
+    Login qilishda Email/Phone va Password orqali bo'ladi.
+    Parolni unutdingizni (parolni qayta tiklash) funksionali bo'lsin.
+    * */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name="name")
     private String name;
+
     @Column(name="username")
     private String username; //email or phone
 
@@ -27,11 +41,10 @@ public class ProfileEntity {
 
     @Column(name="status")
     @Enumerated(EnumType.STRING)
-    private GeneralStatus status;  //Active, Block
+    private GeneralStatus status;  //Active, Block Emums ochiladi
 
     @Column(name="visible")
     private boolean visible = Boolean.TRUE;
-
 
     private LocalDateTime createdDate;
 

@@ -1,0 +1,10 @@
+POST localhost:8089/auth/register
+Content-Type: application/json
+
+{
+  "name": "Muhammadjon",
+  "username": "jmaxjj@naver.com",
+  "password": "max"
+}
+
+###

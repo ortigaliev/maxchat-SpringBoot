@@ -1,5 +1,7 @@
 package api.maxchat.maxchat.controller;
 
+import api.maxchat.maxchat.dto.AuthDTO;
+import api.maxchat.maxchat.dto.ProfileDTO;
 import api.maxchat.maxchat.dto.RegistrationDTO;
 import api.maxchat.maxchat.service.AuthService;
 import jakarta.validation.Valid;
@@ -20,12 +22,18 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegistrationDTO dto) {
-        System.out.println("dto=====" + dto);
+        System.out.println("Register dto=====" + dto);
         return ResponseEntity.ok().body(authService.register(dto));
     }
 
     @GetMapping("/register/verification/{token}")
     public ResponseEntity<String> regVerification(@PathVariable("token") String token) {
         return ResponseEntity.ok().body(authService.regVerification(token));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ProfileDTO> login(@Valid @RequestBody AuthDTO dto) {
+        System.out.println("LOGIN dto=====" + dto);
+        return ResponseEntity.ok().body(authService.login(dto));
     }
 }

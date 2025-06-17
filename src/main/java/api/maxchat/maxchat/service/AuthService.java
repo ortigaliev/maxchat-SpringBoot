@@ -1,5 +1,7 @@
 package api.maxchat.maxchat.service;
 
+import api.maxchat.maxchat.dto.AuthDTO;
+import api.maxchat.maxchat.dto.ProfileDTO;
 import api.maxchat.maxchat.dto.RegistrationDTO;
 import api.maxchat.maxchat.entity.ProfileEntity;
 import api.maxchat.maxchat.enums.GeneralStatus;
@@ -85,4 +87,31 @@ public class AuthService {
         throw new AppBadException("Verification failed");
 
     }
+
+    public ProfileDTO login(AuthDTO dto){
+        //dto
+        //check: user bor yoki yoi'qligini tekshiramiz
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisible(dto.getUsername(), true);
+        if(optional.isEmpty()){
+            throw new AppBadException("Username or password is wrong!");
+        }
+        //password: Paswordni shifrlangani bn user kiritgan pasword tekshiriladi
+        ProfileEntity profile = optional.get();
+        if(!bCryptPasswordEncoder.matches(dto.getPassword(), profile.getPassword())){
+            throw new AppBadException("Username or password is wrong!");
+        }
+        /*Status: Statusini tekshiramiz. Activga tekshiramiz */
+        if(!profile.getStatus().equals(GeneralStatus.ACTIVE)){
+            throw new AppBadException("Wrong status!");
+        }
+
+        //response
+        ProfileDTO response = new ProfileDTO();
+        response.setName(profile.getName());
+        response.setUsername(profile.getUsername());
+        response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));
+        
+        return null;
+    }
+
 }

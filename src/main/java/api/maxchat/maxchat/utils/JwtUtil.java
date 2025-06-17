@@ -1,5 +1,6 @@
 package api.maxchat.maxchat.utils;
 
+import api.maxchat.maxchat.dto.JwtDTO;
 import api.maxchat.maxchat.enums.ProfileRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,9 +15,15 @@ public class JwtUtil {
     private static final int tokenLiveTime = 1000 * 3600 * 24; // 1-day
     private static final String secretKey = "veryLongSecretmazgillattayevlasharaaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
 
+    public static String encode(Integer id) {
+        return encode(id, List.of());//role bo'lmagan holat
+    }
+
     public static String encode(Integer id, List<ProfileRole> roleList) {
         /*ROLE_USER, ROLE_ADMIN*/
-        String strRoles = roleList.stream().map(Enum::name).collect(Collectors.joining(","));
+        String strRoles = roleList.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(","));
 
         /*Yuqoridagi ol versioni*/
         /*Map<Srting> strList = new LinkedList<>();
@@ -25,12 +32,13 @@ public class JwtUtil {
         }
         String roleString = String.join(",", strList);*/
 
-        Map<String, String> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
         claims.put("role", strRoles);
 
 
         return Jwts
                 .builder()
+                .claims(claims)
                 .subject(String.valueOf(id))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + tokenLiveTime))
@@ -38,14 +46,42 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static Integer decodeRegVerToken(String token) {
+    public static JwtDTO decode(String token) {
         Claims claims = Jwts
                 .parser()
                 .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return Integer.valueOf(claims.getSubject());
+
+        Integer id = Integer.valueOf(claims.getSubject());
+        String strRole = (String) claims.get("role");
+
+        List<ProfileRole> roleLis = new ArrayList<>();
+        if (strRole != null && !strRole.isEmpty()) {
+            roleLis = Arrays.stream(strRole.split(","))
+                    .map(ProfileRole::valueOf)
+                    .toList();
+        }
+
+        /*ROLE_USER, ROLE_ADMIN*/
+        /*String[] roleArray = strRole.split(",");
+        List<ProfileRole> roleLis1 = new ArrayList<>();
+        for(String role : roleArray){
+            roleLis1.add(ProfileRole.valueOf(role));
+        }*/
+
+        /*Yuqoridagini Map versiyasi */
+        /*List<ProfileRole> roleLis = Arrays.stream(strRole.split(","))
+                .map(item -> ProfileRole.valueOf(item))
+                .collect(Collectors.toList());*/
+
+        /*Yuqoridagini New updated versiyasi */
+//        List<ProfileRole> roleLis = Arrays.stream(strRole.split(","))
+//                .map(ProfileRole::valueOf)
+//                .toList();
+
+        return new JwtDTO(id, roleLis);
 
     }
 

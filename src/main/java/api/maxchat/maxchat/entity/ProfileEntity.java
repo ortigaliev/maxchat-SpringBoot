@@ -48,5 +48,4 @@ public class ProfileEntity {
 
     private LocalDateTime createdDate;
 
-
 }

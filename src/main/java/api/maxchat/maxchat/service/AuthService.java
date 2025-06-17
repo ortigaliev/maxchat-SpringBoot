@@ -1,6 +1,7 @@
 package api.maxchat.maxchat.service;
 
 import api.maxchat.maxchat.dto.AuthDTO;
+import api.maxchat.maxchat.dto.JwtDTO;
 import api.maxchat.maxchat.dto.ProfileDTO;
 import api.maxchat.maxchat.dto.RegistrationDTO;
 import api.maxchat.maxchat.entity.ProfileEntity;
@@ -74,9 +75,12 @@ public class AuthService {
 
     public String regVerification(String token){
         try {
-            Integer profileId = JwtUtil.decodeRegVerToken(token);
+            JwtDTO jwt = JwtUtil.decode(token); //to'g'ri decode
+            Integer profileId = jwt.getId();//id ni ajratib olish
+
             ProfileEntity profile = profileService.getById(profileId);
             System.out.println("profile" + profile);
+
             if(profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)){
                 //IN_REGISTRATION => Active change
                 profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
@@ -105,13 +109,15 @@ public class AuthService {
             throw new AppBadException("Wrong status!");
         }
 
-        //response
+        /*Response*/
         ProfileDTO response = new ProfileDTO();
         response.setName(profile.getName());
         response.setUsername(profile.getUsername());
         response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));
-        
-        return null;
+
+        /*JWT*/
+        response.setJwt(JwtUtil.encode(profile.getId(), response.getRoleList()));
+        return response;
     }
 
 }

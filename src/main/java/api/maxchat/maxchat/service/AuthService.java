@@ -43,7 +43,7 @@ public class AuthService {
 
         //1. Validation
         //2. username check
-        Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisible(registerDTO.getUsername(), true);
+        Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisible(registerDTO.getUsername() /*, true*/);
 
         if (optional.isPresent()) {
             ProfileEntity profile = optional.get();
@@ -95,7 +95,7 @@ public class AuthService {
     public ProfileDTO login(AuthDTO dto){
         //dto
         //check: user bor yoki yoi'qligini tekshiramiz
-        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisible(dto.getUsername(), true);
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisible(dto.getUsername()/*, true*/);
         if(optional.isEmpty()){
             throw new AppBadException("Username or password is wrong!");
         }

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer> {
 
     //select * from profile where username = ? and visible = true;
-    Optional<ProfileEntity> findByUsernameAndVisible(String username, boolean visible);
+    Optional<ProfileEntity> findByUsernameAndVisible(String username);
     Optional<ProfileEntity> findByIdAndVisibleTrue(Integer id);
 
 
@@ -20,4 +20,6 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
     @Transactional
     @Query("update ProfileEntity set status =?2 where id = ?1 ")
     void changeStatus(Integer id, GeneralStatus status);
+
+    Optional<ProfileEntity> findByUsernameAndVisibleTrue(String username, boolean visible);
 }

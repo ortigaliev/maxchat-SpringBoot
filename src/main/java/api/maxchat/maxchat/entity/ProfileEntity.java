@@ -46,6 +46,10 @@ public class ProfileEntity {
     @Column(name="visible")
     private boolean visible = Boolean.TRUE;
 
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
+
+    //@OneToMany(mappedBy = "profile")
+    //private List<ProfileRoleEntity> roleList;
 
 }

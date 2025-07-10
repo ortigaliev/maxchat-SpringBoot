@@ -25,7 +25,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String encode(Integer id, List<ProfileRole> roleList) {
+    public static String encode(String username, Integer id, List<ProfileRole> roleList) {
         /*ROLE_USER, ROLE_ADMIN*/
         String strRoles = roleList.stream()
                 .map(Enum::name)
@@ -40,12 +40,13 @@ public class JwtUtil {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", strRoles);
+        claims.put("id", String.valueOf(id));
 
 
         return Jwts
                 .builder()
                 .claims(claims)
-                .subject(String.valueOf(id))
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + tokenLiveTime))
                 .signWith(getSignInKey())
@@ -60,8 +61,9 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        Integer id = Integer.valueOf(claims.getSubject());
-        String strRole = (String) claims.get("role");
+        String username = claims.getSubject();
+        Integer id = Integer.valueOf((String) claims.get("id"));
+        String strRole = (String) claims.get("roles");
         //"ROLE_USER, ROLE_ADMIN"
         List<ProfileRole> roleLis = new ArrayList<>();
         if (strRole != null && !strRole.isEmpty()) {
@@ -89,7 +91,7 @@ public class JwtUtil {
 //                .map(ProfileRole::valueOf)
 //                .toList();
 
-        return new JwtDTO(id, roleLis);
+        return new JwtDTO(id, username, roleLis);
 
     }
     public static Integer decodeRegVerToken(String token) {

@@ -5,12 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -19,8 +19,16 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SpringConfig {
+
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public static final String[] AUTH_WHITELIST = {
+            "/auth/**",
+    };
 
     @Bean
     public AuthenticationProvider authenticationProvider(BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -36,10 +44,10 @@ public class SpringConfig {
         // Ya'ni foydalanuvchi murojat qilayotgan API-larni ishlatishga ruxsati bor yoki yo'qligini tekshirishdir.
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(AUTH_WHITELIST).permitAll()
                     .anyRequest()
                     .authenticated();
-        }).formLogin(Customizer.withDefaults());
+        }).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.csrf(AbstractHttpConfigurer::disable); // csrf o'chirilgan
         http.cors(httpSecurityCorsConfigurer -> {

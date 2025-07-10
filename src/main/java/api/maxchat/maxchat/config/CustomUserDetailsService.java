@@ -18,6 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private ProfileRepository profileRepository;
+
     @Autowired
     private ProfileRoleRepository profileRoleRepository;
 

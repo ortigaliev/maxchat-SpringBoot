@@ -4,6 +4,7 @@ import api.maxchat.maxchat.entity.ProfileEntity;
 import api.maxchat.maxchat.enums.GeneralStatus;
 import api.maxchat.maxchat.enums.ProfileRole;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -18,12 +19,20 @@ public class CustomUserDetails implements UserDetails {
     private GeneralStatus status;
 
     public CustomUserDetails(ProfileEntity profile, List<ProfileRole> roleList) {
-       /* this.id = id;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
-        this.status = status;*/
+        this.id = profile.getId();
+        this.name = profile.getName();
+        this.username = profile.getUsername();
+        this.password = profile.getPassword();
+        this.status = profile.getStatus();
+
+        /*List<SimpleGrantedAuthority> roles = new ArrayList<>();
+        for(ProfileRole role : roleList) {
+            roles.add(new SimpleGrantedAuthority(role.name()));
+        }
+        this.authorities = roles;*/
+
+        this.authorities = roleList.stream().map(item -> new SimpleGrantedAuthority(item.name())).toList();
+
     }
 
     @Override
@@ -33,31 +42,31 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return status.equals(GeneralStatus.ACTIVE);
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
     }
 }

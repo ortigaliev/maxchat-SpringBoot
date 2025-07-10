@@ -1,5 +1,6 @@
 package api.maxchat.maxchat.controller;
 
+import api.maxchat.maxchat.dto.AppResponse;
 import api.maxchat.maxchat.dto.AuthDTO;
 import api.maxchat.maxchat.dto.ProfileDTO;
 import api.maxchat.maxchat.dto.RegistrationDTO;
@@ -21,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegistrationDTO dto) {
+    public ResponseEntity<AppResponse<String>> register(@Valid @RequestBody RegistrationDTO dto) {
         System.out.println("Register dto=====" + dto);
         return ResponseEntity.ok().body(authService.register(dto));
     }

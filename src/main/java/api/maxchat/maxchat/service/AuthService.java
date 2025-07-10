@@ -1,9 +1,6 @@
 package api.maxchat.maxchat.service;
 
-import api.maxchat.maxchat.dto.AuthDTO;
-import api.maxchat.maxchat.dto.JwtDTO;
-import api.maxchat.maxchat.dto.ProfileDTO;
-import api.maxchat.maxchat.dto.RegistrationDTO;
+import api.maxchat.maxchat.dto.*;
 import api.maxchat.maxchat.entity.ProfileEntity;
 import api.maxchat.maxchat.enums.GeneralStatus;
 import api.maxchat.maxchat.enums.ProfileRole;
@@ -39,11 +36,11 @@ public class AuthService {
     @Autowired
     private ProfileService profileService;
 
-    public String register(RegistrationDTO registerDTO) {
+    public AppResponse<String> register(RegistrationDTO registerDTO) {
 
         //1. Validation
         //2. username check
-        Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisibleTrue(registerDTO.getUsername() /*, true*/);
+        Optional<ProfileEntity>optional = profileRepository.findByUsernameAndVisibleTrue(registerDTO.getUsername());
 
         if (optional.isPresent()) {
             ProfileEntity profile = optional.get();
@@ -70,7 +67,7 @@ public class AuthService {
 
         emailSendingService.sendRegistrationEmail(registerDTO.getUsername(), entity.getId());
 
-        return "Registration successful";
+        return new AppResponse<>("Registration successful");
     }
 
     public String regVerification(String token){
@@ -95,7 +92,7 @@ public class AuthService {
     public ProfileDTO login(AuthDTO dto){
         //dto
         //check: user bor yoki yoi'qligini tekshiramiz
-        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername()/*, true*/);
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(dto.getUsername());
         if(optional.isEmpty()){
             throw new AppBadException("Username or password is wrong!");
         }

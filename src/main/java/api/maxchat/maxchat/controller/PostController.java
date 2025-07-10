@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/gossip")
+@RequestMapping("/post")
 public class PostController {
 
     @PostMapping("/create")

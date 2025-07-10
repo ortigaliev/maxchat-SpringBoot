@@ -15,17 +15,7 @@ public class JwtUtil {
     private static final int tokenLiveTime = 1000 * 3600 * 24; // 1-day
     private static final String secretKey = "veryLongSecretmazgillattayevlasharaaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
 
-    public static String encode(Integer id) {
-        return Jwts
-                .builder()
-                .subject(String.valueOf(id))
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + tokenLiveTime))
-                .signWith(getSignInKey())
-                .compact();
-    }
-
-    public static String encode(String username, Integer id, List<ProfileRole> roleList) {
+    public static String encode(Integer id, String username, List<ProfileRole> roleList) {
         /*ROLE_USER, ROLE_ADMIN*/
         String strRoles = roleList.stream()
                 .map(Enum::name)
@@ -94,6 +84,17 @@ public class JwtUtil {
         return new JwtDTO(id, username, roleLis);
 
     }
+
+    public static String encode(Integer id) {
+        return Jwts
+                .builder()
+                .subject(String.valueOf(id))
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + tokenLiveTime))
+                .signWith(getSignInKey())
+                .compact();
+    }
+
     public static Integer decodeRegVerToken(String token) {
         Claims claims = Jwts
                 .parser()

@@ -7,8 +7,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Table(name="profile")
 @Entity
+@Table(name="profile")
 @Getter
 @Setter
 public class ProfileEntity {

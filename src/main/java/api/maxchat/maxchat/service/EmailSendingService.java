@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class EmailSendingService {
     @Value("${spring.mail.username}")
@@ -73,6 +75,11 @@ public class EmailSendingService {
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(body, true);
+
+            CompletableFuture.runAsync(() -> {
+                javaMailSender.send(msg);
+            });
+
             javaMailSender.send(msg);
         } catch (MessagingException e){
             throw new RuntimeException(e);

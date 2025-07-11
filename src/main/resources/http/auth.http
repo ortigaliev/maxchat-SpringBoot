@@ -1,17 +1,17 @@
-POST localhost:8080/auth/register
+POST localhost:8087/auth/register
 Content-Type: application/json
 
 {
-  "name": "Muhammadjon",
-  "username": "jmaxjj@naver.com",
+  "name": "Max",
+  "username": "ortigaliyevm@gmail.com",
   "password": "max"
 }
 
 ###Login
-POST localhost:8090/auth/login
+POST localhost:8087/auth/login
 Content-Type: application/json
 
 {
-  "username": "jmaxjj@naver.com",
+  "username": "ortigaliyevm@gmail.com",
   "password": "max"
 }

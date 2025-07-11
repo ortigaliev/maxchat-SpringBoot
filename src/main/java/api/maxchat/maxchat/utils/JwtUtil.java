@@ -21,13 +21,6 @@ public class JwtUtil {
                 .map(Enum::name)
                 .collect(Collectors.joining(","));
 
-        /*Yuqoridagi yangi versioni*/
-        /*Map<Srting> strList = new LinkedList<>();
-        for(ProfileRole role : roleList){
-            strList.add(role.name());
-        }
-        String roleString = String.join(",", strList);*/
-
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", strRoles);
         claims.put("id", String.valueOf(id));
@@ -52,34 +45,26 @@ public class JwtUtil {
                 .getPayload();
 
         String username = claims.getSubject();
-        Integer id = Integer.valueOf((String) claims.get("id"));
-        String strRole = (String) claims.get("roles");
-        //"ROLE_USER, ROLE_ADMIN"
-        List<ProfileRole> roleLis = new ArrayList<>();
-        if (strRole != null && !strRole.isEmpty()) {
-            roleLis = Arrays.stream(strRole.split(","))
-                    .map(ProfileRole::valueOf)
-                    .toList();
+
+        Object idObj = claims.get("id");
+        Integer id = null;
+        if (idObj == null) {
+            throw new RuntimeException("JWT token ichida 'id' mavjud emas");
+        }
+        try {
+            id = Integer.valueOf(idObj.toString());
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("JWT token ichidagi 'id' butun son formatida emas: " + idObj, e);
         }
 
+        String strRole = (String) claims.get("roles");
+        if (strRole == null || strRole.isBlank()) {
+            throw new RuntimeException("JWT token ichida 'roles' mavjud emas yoki bo‘sh");
+        }
 
-
-        /*ROLE_USER, ROLE_ADMIN*/
-        /*String[] roleArray = strRole.split(",");
-        List<ProfileRole> roleLis1 = new ArrayList<>();
-        for(String role : roleArray){
-            roleLis1.add(ProfileRole.valueOf(role));
-        }*/
-
-        /*Yuqoridagini Map versiyasi */
-        /*List<ProfileRole> roleLis = Arrays.stream(strRole.split(","))
-                .map(item -> ProfileRole.valueOf(item))
-                .collect(Collectors.toList());*/
-
-        /*Yuqoridagini New updated versiyasi */
-//        List<ProfileRole> roleLis = Arrays.stream(strRole.split(","))
-//                .map(ProfileRole::valueOf)
-//                .toList();
+        List<ProfileRole> roleLis = Arrays.stream(strRole.split(","))
+                .map(ProfileRole::valueOf)
+                .toList();
 
         return new JwtDTO(id, username, roleLis);
 

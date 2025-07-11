@@ -80,16 +80,6 @@ public class EmailSendingService {
 
     }
 
-//    private void sendSimpleEmail(String email, String subject, String body) {
-//        SimpleMailMessage msg = new SimpleMailMessage();
-//        msg.setFrom(fromAccount);
-//        msg.setTo(email);
-//        msg.setSubject(subject);
-//        msg.setText(body);
-//        javaMailSender.send(msg);
-//
-//    }
-
 
 
 }

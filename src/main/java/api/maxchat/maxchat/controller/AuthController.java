@@ -23,7 +23,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AppResponse<String>> register(@Valid @RequestBody RegistrationDTO dto) {
-        System.out.println("Register dto=====" + dto);
         return ResponseEntity.ok().body(authService.register(dto));
     }
 
